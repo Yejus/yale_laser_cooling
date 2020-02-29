@@ -42,16 +42,11 @@ with open('N4.csv') as file:
         data4.append(row)
 file.close()
 
-with open('N5.csv') as file: 
-    tempo = csv.reader(file)
-    for row in tempo:
-        data5.append(row)
-file.close()
 
 with open('N_back.csv') as file: 
     tempo = csv.reader(file)
     for row in tempo:
-        N_back.append(row)
+        background.append(row)
 file.close()
 
 print(background)
@@ -59,13 +54,13 @@ print(data1)
 print(data2)
 print(data3)
 print(data4)
-print(data5)  
+  
 
 print(len(data1))
 print(len(data2))
 print(len(data3))
 print(len(data4))
-print(len(data5))
+
 
 #Subtract background from data and average data 
 
@@ -74,16 +69,15 @@ for jj in range(len(data1)):
     data2[jj][1] = data2[jj][1] - background[jj][1]
     data3[jj][1] = data3[jj][1] - background[jj][1]
     data4[jj][1] = data4[jj][1] - background[jj][1]
-    data5[jj][1] = data5[jj][1] - background[jj][1]
 
 for jj in range(len(data1)):
-    averaged_value_jj = (data1[jj][1] + data2[jj][1] + data3[jj][1] + data4[jj][1] + data5[jj][1])/5
+    averaged_value_jj = (data1[jj][1] + data2[jj][1] + data3[jj][1] + data4[jj][1])/5
     averaged_data.append(averaged_value_jj)
     time_values.append(data1[jj][0])
 
 #Calculate statistics
 
-std_dev = [np.std([data1[jj][1],data1[jj][1],data1[jj][1],data1[jj][1],data1[jj][1]]) for jj in range(len(data1))]
+std_dev = [np.std([data1[jj][1],data2[jj][1],data3[jj][1],data4[jj][1]]) for jj in range(len(data1))]
 
 
 #Curve fitting the MOT loading curve and determining the laser-cooling rate
@@ -104,7 +98,7 @@ alpha_uncert = uncert[0]
 print('$\alpha$ = ' + str(alpha) + str(alpha_uncert))
 #Calculate goodness of fit
 
-residuals = [((averaged_data[jj]-fit_data[jj]])/std_dev[jj])**2 for jj in range(len(data1))]
+residuals = [((averaged_data[jj]-fit_data[jj])/std_dev[jj])**2 for jj in range(len(data1))]
 chi_square = sum(residuals)/len(residuals)
 
 print('Chi-square for the fit is ' + str(round(chi_square,2)))
