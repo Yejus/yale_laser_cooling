@@ -49,26 +49,14 @@ with open('N_back.csv') as file:
         background.append(row)
 file.close()
 
-print(background)
-print(data1)
-print(data2)
-print(data3)
-print(data4)
-  
-
-print(len(data1))
-print(len(data2))
-print(len(data3))
-print(len(data4))
-
 
 #Subtract background from data and average data 
 
 for jj in range(len(data1)):
-    data1[jj][1] = data1[jj][1] - background[jj][1]
-    data2[jj][1] = data2[jj][1] - background[jj][1]
-    data3[jj][1] = data3[jj][1] - background[jj][1]
-    data4[jj][1] = data4[jj][1] - background[jj][1]
+    data1[jj][1] = float(data1[jj][1]) - float(background[jj][1])
+    data2[jj][1] = float(data2[jj][1]) - float(background[jj][1])
+    data3[jj][1] = float(data3[jj][1]) - float(background[jj][1])
+    data4[jj][1] = float(data4[jj][1]) - float(background[jj][1])
 
 for jj in range(len(data1)):
     averaged_value_jj = (data1[jj][1] + data2[jj][1] + data3[jj][1] + data4[jj][1])/5
