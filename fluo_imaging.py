@@ -1,3 +1,4 @@
+#Too slow!! and crashes!! 
 import numpy as np 
 import matplotlib.pyplot as plt
 import os 
@@ -6,93 +7,66 @@ from scipy.optimize import curve_fit
 
 os.chdir('./data/fluorescence/')
 
-#Storing the data, background, and the averaged data
+#Reading data off CSV files into lists (not arrays, because I'm a caveman)
 
-background = []
+nback = 0.5348
+background = 0.5343791
 data1 = []
 data2 = [] 
 data3 = []
 data4 = []
-data5 = [] 
 time_values = []
 
 averaged_data = []
 
 with open('N1.csv') as file: 
+    next(file)
+    next(file)
+    next(file)
     tempo = csv.reader(file)
     for row in tempo:
         data1.append(row)
 file.close()
 
 with open('N2.csv') as file: 
+    next(file)
+    next(file)
+    next(file)
     tempo = csv.reader(file)
     for row in tempo:
         data2.append(row)
 file.close()
 
 with open('N3.csv') as file: 
+    next(file)
+    next(file)
+    next(file)
     tempo = csv.reader(file)
     for row in tempo:
         data3.append(row)
 file.close()
 
 with open('N4.csv') as file: 
+    next(file)
+    next(file)
+    next(file)
     tempo = csv.reader(file)
     for row in tempo:
         data4.append(row)
 file.close()
 
 
-with open('N_back.csv') as file: 
-    tempo = csv.reader(file)
-    for row in tempo:
-        background.append(row)
-file.close()
-
-
-#Subtract background from data and average data 
-
 for jj in range(len(data1)):
-    data1[jj][1] = float(data1[jj][1]) - float(background[jj][1])
-    data2[jj][1] = float(data2[jj][1]) - float(background[jj][1])
-    data3[jj][1] = float(data3[jj][1]) - float(background[jj][1])
-    data4[jj][1] = float(data4[jj][1]) - float(background[jj][1])
+    data1[jj][1] = float(data1[jj][1]) - background
+for jj in range(len(data2)):
+    data2[jj][1] = float(data2[jj][1]) - background
+for jj in range(len(data3)):
+    data3[jj][1] = float(data3[jj][1]) - background
+for jj in range(len(data4)):
+    data4[jj][1] = float(data4[jj][1]) - background
 
-for jj in range(len(data1)):
-    averaged_value_jj = (data1[jj][1] + data2[jj][1] + data3[jj][1] + data4[jj][1])/5
-    averaged_data.append(averaged_value_jj)
-    time_values.append(data1[jj][0])
+data1yval = [data1[jj][1] for jj in range(len(data1))]
+data1timeval = [data1[jj][0] for jj in range(len(data1))]
 
-#Calculate statistics
-
-std_dev = [np.std([data1[jj][1],data2[jj][1],data3[jj][1],data4[jj][1]]) for jj in range(len(data1))]
-
-
-#Curve fitting the MOT loading curve and determining the laser-cooling rate
-
-x_to_fit = []
-y_to_fit = []
-
-def charging_curve(t, alpha, k):
-    return(k*(1 - np.exp(-t/alpha)))
-
-p_init = [1,1]
-popt, pcov = curve_fit(charging_curve, time_values, p0 = p_init)
-fit_data = list(charging_curve(t, *popt), time_values)
-uncert = np.sqrt(np.diag(pcov))
-
-alpha = popt[0]
-alpha_uncert = uncert[0]
-print('$\alpha$ = ' + str(alpha) + str(alpha_uncert))
-#Calculate goodness of fit
-
-residuals = [((averaged_data[jj]-fit_data[jj])/std_dev[jj])**2 for jj in range(len(data1))]
-chi_square = sum(residuals)/len(residuals)
-
-print('Chi-square for the fit is ' + str(round(chi_square,2)))
-fig2 = plt.figure() 
-axs2 = fig2.add_subplot(111)
-axs2.plot(time_values, fit_data)
-axs2.errorbar(x = time_values, y = averaged_data, yerr = std_dev)
-plt.plot()
-
+plt.plot(data1timeval, data1yval)
+plt.show()
